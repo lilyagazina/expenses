@@ -1,0 +1,55 @@
+
+/*заполнения таблицы данными*/
+INSERT INTO public.expenses (id, name, date, category, amount) VALUES (1, 'Проезд в автобусе', '2021-01-30', 'Транспорт', 50);
+INSERT INTO public.expenses (id, name, date, category, amount) VALUES (2, 'Проезд в метро', '2021-01-30', 'Транспорт', 50);
+INSERT INTO public.expenses (id, name, date, category, amount) VALUES (3, 'Покупка книги', '2021-01-31', 'Прочие покупки', 300);
+INSERT INTO public.expenses (id, name, date, category, amount) VALUES (4, 'Покупка продуктов', '2021-01-31', 'Покупка продуктов', 450);
+INSERT INTO public.expenses (id, name, date, category, amount) VALUES (5, 'Поход в кино', '2021-02-01', 'Развлечения', 400);
+INSERT INTO public.expenses (id, name, date, category, amount) VALUES (6, 'Кофе', '2021-02-01', 'Еда вне дома', 150);
+INSERT INTO public.expenses (id, name, date, category, amount) VALUES (7, 'Покупка продуктов', '2021-02-02', 'Покупка продуктов', 600);
+INSERT INTO public.expenses (id, name, date, category, amount) VALUES (8, 'Поход в театр', '2021-02-14', 'Развлечения', 1000);
+INSERT INTO public.expenses (id, name, date, category, amount) VALUES (9, 'Цветы', '2021-02-14', null, 500);
+
+/*вывод таблицы*/
+SELECT * FROM expenses;
+/*сортируем таблицу на колонке amount по убыванию*/
+SELECT * FROM  expenses ORDER BY amount DESC;
+/*сортируем таблицу на колонке amount по возрастанию*/
+SELECT * FROM  expenses ORDER BY amount;
+/*подсчитать количество строк в таблице*/
+SELECT count(*) FROM expenses;
+/*посчитать количество строк в таблице, у которых значение
+в одной из колонок не равно null, то нам нужно в функцию
+COUNT в качестве аргумента передать название этой колонки*/
+SELECT COUNT(category) FROM expenses;
+/*посчитать количество уникальных значений в некоторой колонке, то для этого существует функция
+DISTINCT. Ей мы передаем название колонки, в которой нужно посчитать количество уникальных значений.*/
+SELECT count(distinct(category)) FROM expenses;
+/*Выведем минимальный, максимальный и средний расход*/
+SELECT min(amount), max(amount), avg(amount) FROM expenses;
+/* суммируем все значения в колонке amount*/
+SELECT sum(amount) FROM expenses;
+
+/* посчитать количество операций в каждой категории:*/
+SELECT category, COUNT(*) FROM expenses GROUP BY category;
+/*найти сумму минимальной, максимальной и средней операции в каждой категории*/
+SELECT  category, min(amount),max(amount), avg(amount) FROM expenses GROUP BY category;
+/*получить сумму расходов по каждой категории*/
+SELECT category, sum(amount) FROM expenses GROUP BY category;
+/*найти все категории, по которым было больше одного расхода*/
+SELECT category, COUNT(*) FROM expenses GROUP BY category HAVING count(*)>1;
+/*категории, для которых сумма расходов была больше 1000*/
+SELECT category, sum(amount) FROM expenses GROUP BY category HAVING sum(amount)>1000;
+/*ограничивает количество возвращаемых строк*/
+SELECT * FROM expenses LIMIT 4;
+/*смещает начало возвращаемых строк на указанную величину*/
+SELECT * FROM expenses OFFSET 4;
+
+
+
+CREATE TABLE human1 ( id SERIAL UNIQUE , name text PRIMARY KEY, age INTEGER CHECK (age >= 18)  , driverLicense BOOLEAN, car_id SERIAL REFERENCES car1 (id));
+CREATE TABLE car1 ( id SERIAL UNIQUE , brand text  , model text  , cost INTEGER  );
+
+SELECT human1.name, human1.age, car1.brand
+FROM human1
+         INNER JOIN car1 on human1.car_id = car1.id
